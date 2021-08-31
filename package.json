@@ -1,0 +1,17 @@
+{
+    "name": "real-estate-manager",
+    "version": "1.0.0",
+    "description": "A dapp to mange real estates and renting",
+    "main": "truffle.js",
+    "directories": {
+        "test": "test"
+    },
+    "scripts": {
+        "dev": "lite-server"
+    },
+    "author": "Alexis Portmann",
+    "license": "openBSD",
+    "devDependencies": {
+        "lite-server": "^2.5.4"
+    }
+}

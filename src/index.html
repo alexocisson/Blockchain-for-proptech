@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real estate manager</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container" style="width: 70%;">
+
+        <h1 class="text-center">Real estate manager</h1>
+
+        <div class="text-left"> 
+            <div> Main contract adress: <span id="main-contract-address"></span> </div>
+            <div> Your adress: <span id="accountAddress"></span> </div>
+            
+            <br />
+
+            <button id="manageEstateButton" onclick="App.initManagePage()" type="button" class="btn btn-primary btn-sm">Manage my estates</button>
+            <button id="createEstateButton" onclick="App.initCreatePage()" type="button" class="btn btn-primary btn-sm">Create estates</button>
+            <button id="changeReferenceButton" onclick="App.initChangePage()" type="button" class="btn btn-primary btn-sm">Change reference contract</button>
+
+            <br />
+            <br />
+
+            <div id="manageEstates">
+                <form onSubmit="App.loadEstates(); return false;" role="form" class="form-inline">
+                    <div class="form-group mb-2">
+                        <label for="ownerAdress">Get estates from an adress:</label>
+                        <input id="ownerAdress" class="form-control" placeholder="Owner address" pattern="0x[a-fA-F0-9]{40}$">
+                        <button type="submit" class="btn btn-primary btn-sm">Show Estates</button>
+                    </div>
+                </form>
+            
+                <div id="estates" style="display:none">
+                    <label id="estatesNumberLabel" for="estateAdresses">Select estate:</label>
+                    <select name="estateAdresses" id="estateAdresses">
+                    </select>
+
+                    <div id="transfertEstate" style="display:none" >
+                        <form onSubmit="App.transfertEstate(); return false;" role="form" class="form-inline">
+                            <div class="form-group mb-2"> 
+                                <label for="recieverAdress">Transfert to:</label>
+                                <input id="recieverAdress" class="form-control" placeholder="adress of the reciever" pattern="0x[a-fA-F0-9]{40}$">
+                                <button type="submit" class="btn btn-primary btn-sm">Transfert!</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div id="removeRent" style="display:none" >
+                        <button onclick="App.removeRent(); return false;" class="btn btn-primary btn-sm">Remove rent!</button>
+                    </div>
+
+                    <div id="rentEstateStatus" style="display:none">
+                    </div>
+                    <div><span id="isRent"></span> </div>
+                    <div id="createRentContract" style="display:none">
+                        <form onSubmit="App.rentEstate(); return false;" role="form" class="form-inline">
+                            <div class="form-group mb-2">
+                                <label for="monthlyPrice">Price :</label>
+                                <input id="monthlyPrice" class="form-control" placeholder="price in gwei" pattern="^[0-9]*$">
+                                <label for="downPayment">Down payment :</label>
+                                <input id="downPayment" class="form-control" placeholder="price in gwei" pattern="^[0-9]*$">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-sm">Rent my estate!</button>
+                        </form>
+                    </div>
+                    <div id="showRentingInfo" style="display:none">
+                        <div>Is rentend: <span id="isRentedLabel"></span> </div>
+                        <div>Monthly price:  <span id="monthlyPriceLabel"></span> </div>
+                        <div>Down payment: <span id="downPaymentLabel"></span> </div>
+                        <div id="showRentingInfoPrivate" style="display:none">
+                            <div>Money stocked on the contract:  <span id="moneyStockedLabel"></span> </div>
+                            <div>Month not claimed by the owner:  <span id="monthNotClaimedLabel"></span> </div>
+                            <div>-> Value:  <span id="moneyNotClaimedValueLabel"></span> </div>
+                        </div>
+
+                        <div id="signRenting" style="display:none">
+                            <form onSubmit="App.signRent(); return false;" role="form" class="form-inline">
+                                <div class="form-group mb-2">
+                                    <label for="amountMoneySignRent">Amount of money :</label>
+                                    <input id="amountMoneySignRent" class="form-control" placeholder="price in gwei" pattern="^[0-9]*$">
+                                    <button type="submit" class="btn btn-primary btn-sm">Sign this rent!</button>
+                                </div>
+                            </form>
+                            
+                        </div>
+                        <div id="payRenting" style="display:none">
+
+                            <form onSubmit="App.payRent(); return false;" role="form" class="form-inline">
+                                <div class="form-group mb-2">
+                                    <label for="amountMoneyPayRent">Amount of money :</label>
+                                    <input id="amountMoneyPayRent" class="form-control" placeholder="price in gwei" pattern="^[0-9]*$">
+                                    <button type="submit" class="btn btn-primary btn-sm">Pay the rent!</button>
+                                </div>
+                            </form>
+                            
+                        </div>
+
+                        <div id="askRent" style="display:none">
+                            <button onclick="App.askRent(); return false;" class="btn btn-primary btn-sm">Ask rent!</button>
+                        </div>
+
+                        <div id="stopRent" style="display:none">
+                            <button onclick="App.stopRent(); return false;" class="btn btn-primary btn-sm">Break contract!</button>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div id="noEstates" style="display:none">
+                    <div> This adress has no estates </div>
+                </div>
+
+
+            </div>
+
+            <div id="createEstates" style="display:none">
+                <div id="notTheowner"> You don't have the authority to issue real estates.</div>
+                <div id="isTheowner"> 
+                    <div> You have the authority to issue real estates. </div>
+
+                    <br />
+
+                    <form onSubmit="App.createEstate(); return false;" role="form" class="form-inline">
+                        <div class="form-group mb-2">
+                            <label for="ownerNewEstateAdress">New estate:</label>
+                            <input id="ownerNewEstateAdress" class="form-control" placeholder="Owner address" pattern="0x[a-fA-F0-9]{40}$">
+                            <input id="nameNewEstate" class="form-control" placeholder="Estate name" pattern="^[a-zA-Z0-9_.-]*$">
+                            <button type="submit" class="btn btn-primary btn-sm">Create estate!</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="changeReference" style="display:none">
+                <form onSubmit="App.changeRef(); return false;" role="form" class="form-inline">
+                    <div class="form-group mb-2">
+                        <label for="factoryNewAddress">Contract address :</label>
+                        <input id="factoryNewAddress" class="form-control" placeholder="address of the factory" pattern="^[0-9]*$">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm">Change address</button>
+                </form>
+            </div>
+            
+
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/web3.min.js"></script>
+    <script src="js/truffle-contract.min.js"></script>
+    <script src="js/app.js"></script>
+    
+</body>
+
+</html>
